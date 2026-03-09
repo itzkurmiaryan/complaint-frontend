@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 
 export default function LeadershipSection() {
   const leaders = [
-    {name:"Dr. Rajeev Sharma",role:"Chancellor",img:"/chancellor.jpg",message:"Welcome to Invertis University, where excellence meets innovation."},
-    {name:"Dr. Anita Verma",role:"Pro Chancellor",img:"/pro-chancellor.jpg",message:"Our mission is to empower students with knowledge and ethics."},
-    {name:"Dr. Pradeep Kumar",role:"Vice Chancellor",img:"/vc.jpg",message:"We focus on creating a safe and transparent campus environment."},
-    {name:"Dr. Lalit Mehta",role:"Chief Proctor",img:"/chief-proctor.jpg",message:"Ensuring campus discipline and student safety is our priority."},
-    {name:"Dr. Deepa Singh",role:"Dean Student Welfare",img:"/dsw.jpg",message:"We are here to support students in academics and well-being."}
+    {name:"Dr. Umesh Gautam",role:"Chancellor",img:"/umesh.jpg",message:"Welcome to Invertis University, where excellence meets innovation."},
+    {name:"Mr. Parth Gautam",role:"Pro Chancellor",img:"/parth.webp",message:"Our mission is to empower students with knowledge and ethics."},
+    {name:"Prof. Y.D.S. Arya",role:"Vice Chancellor",img:"/yds.webp",message:"We focus on creating a safe and transparent campus environment."},
+    {name:"Mr. Amritansh Mishra",role:"Chief Proctor",img:"/amrit.webp",message:"Ensuring campus discipline and student safety is our priority."},
+    {name:"Dr. R.K. Shukla",role:"Dean Engineering & Technology",img:"/rk.webp",message:"We are here to support students in academics and well-being."}
   ];
 
   return (

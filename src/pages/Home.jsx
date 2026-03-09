@@ -250,7 +250,7 @@ CampusCare helps students report infrastructure issues and ragging incidents whi
 
 <section
 className="relative h-[400px] bg-fixed bg-center bg-cover"
-style={{backgroundImage:"url('/invertis-campus.png')"}}
+style={{backgroundImage:"url('/invertis-campus.jpeg')"}}
 >
 
 <div className="flex items-center justify-center h-full bg-black/60">
