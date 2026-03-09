@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import CountUp from "react-countup";
+import { ShieldCheck, MapPin, Sparkles, Trophy } from "lucide-react";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import LeadershipSection from "../components/LeadershipSection";
@@ -8,34 +11,98 @@ import CampusSafety from "../components/CampusSafety";
 
 export default function Home() {
 
-const features = [
-{icon:"🛡️",title:"Safe Reporting",desc:"Students can report issues securely and anonymously."},
-{icon:"📡",title:"Real-time Tracking",desc:"Track complaint progress instantly."},
-{icon:"⚡",title:"Smart Escalation",desc:"Issues escalate automatically if unresolved."},
-{icon:"🏆",title:"Leaderboard",desc:"Students earn points for participation."}
-];
+const mouseX = useMotionValue(0)
+const mouseY = useMotionValue(0)
 
-const stats = [
-{value:"1,254+",label:"Issues Resolved"},
-{value:"3,482+",label:"Active Students"},
-{value:"128+",label:"Ragging Reports Handled"}
-];
+const smoothX = useSpring(mouseX,{stiffness:80})
+const smoothY = useSpring(mouseY,{stiffness:80})
 
-return (
+function moveCursor(e){
+mouseX.set(e.clientX-80)
+mouseY.set(e.clientY-80)
+}
 
-<div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-white via-indigo-50 to-purple-50">
+const features=[
+{
+icon:<ShieldCheck size={30}/>,
+title:"Safe Reporting",
+desc:"Students can report issues anonymously and securely."
+},
+{
+icon:<MapPin size={30}/>,
+title:"Real-time Tracking",
+desc:"Track complaint progress instantly."
+},
+{
+icon:<Sparkles size={30}/>,
+title:"Smart Escalation",
+desc:"Issues escalate automatically if unresolved."
+},
+{
+icon:<Trophy size={30}/>,
+title:"Student Leaderboard",
+desc:"Students earn points for improving campus."
+}
+]
+
+const stats=[
+{value:254,label:"Issues Resolved"},
+{value:1202,label:"Active Students"},
+{value:25,label:"Ragging Reports"}
+]
+
+const steps=[
+{
+title:"Submit Complaint",
+desc:"Student reports an issue through CampusCare with location and category.",
+icon:"1"
+},
+{
+title:"Smart Routing",
+desc:"System automatically sends complaint to the correct department.",
+icon:"2"
+},
+{
+title:"Track Progress",
+desc:"Students track status updates in real time on dashboard.",
+icon:"3"
+},
+{
+title:"Issue Resolved",
+desc:"Admin resolves complaint and system notifies the student.",
+icon:"4"
+}
+]
+
+return(
+
+<div
+onMouseMove={moveCursor}
+className="relative overflow-hidden bg-gradient-to-b from-indigo-50 via-white to-purple-50"
+>
 
 <Navbar/>
 
-{/* Background blobs */}
+{/* Cursor Glow */}
 
-<div className="absolute bg-purple-400 rounded-full top-20 left-10 w-72 h-72 blur-3xl opacity-30 animate-pulse"></div>
-<div className="absolute bg-indigo-400 rounded-full bottom-20 right-10 w-72 h-72 blur-3xl opacity-30 animate-pulse"></div>
+<motion.div
+style={{x:smoothX,y:smoothY}}
+className="fixed w-40 h-40 bg-purple-500 rounded-full pointer-events-none blur-3xl opacity-20"
+/>
 
+{/* Animated Background */}
+
+<div className="absolute bg-purple-400 rounded-full top-10 left-10 w-80 h-80 blur-3xl opacity-30 animate-pulse"></div>
+<div className="absolute bg-indigo-400 rounded-full bottom-10 right-10 w-80 h-80 blur-3xl opacity-30 animate-pulse"></div>
 
 {/* HERO */}
 
-<section className="relative min-h-screen overflow-hidden">
+<section className="relative min-h-screen">
+
+<img
+src="/invertis-campus.jpeg"
+className="absolute object-cover w-full h-full opacity-40"
+/>
 
 <video
 autoPlay
@@ -48,13 +115,13 @@ className="absolute object-cover w-full h-full"
 
 <div className="absolute inset-0 bg-black/70"></div>
 
-<div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center text-white md:px-6">
+<div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center text-white">
 
 <motion.h1
 initial={{opacity:0,y:50}}
 animate={{opacity:1,y:0}}
 transition={{duration:0.8}}
-className="text-3xl font-extrabold md:text-6xl"
+className="text-4xl font-extrabold md:text-6xl"
 >
 
 CampusCare
@@ -67,25 +134,39 @@ Complaint System for Invertis
 
 </motion.h1>
 
-<p className="max-w-xl mt-4 text-base text-gray-200 md:text-lg">
-Report campus issues, track complaints, and improve university life.
+<p className="max-w-xl mt-6 text-gray-200">
+
+Report campus issues and improve university life.
+
 </p>
 
-<div className="flex flex-col gap-4 mt-8 sm:flex-row">
+<div className="flex flex-col gap-4 mt-10 sm:flex-row">
+
+<motion.div whileHover={{scale:1.1}} whileTap={{scale:0.95}}>
 
 <Link
 to="/complaint"
-className="px-6 py-3 text-white transition rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 hover:scale-105"
+className="py-3 font-semibold text-white shadow-xl px-7 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500"
 >
+
 Report Issue
+
 </Link>
+
+</motion.div>
+
+<motion.div whileHover={{scale:1.1}}>
 
 <Link
 to="/dashboard"
-className="px-6 py-3 transition border border-white rounded-xl hover:bg-white/20"
+className="py-3 font-semibold border border-white px-7 rounded-xl hover:bg-white/20"
 >
+
 Explore Dashboard
+
 </Link>
+
+</motion.div>
 
 </div>
 
@@ -93,36 +174,49 @@ Explore Dashboard
 
 </section>
 
-
 {/* FEATURES */}
 
-<section className="px-4 py-20 md:px-6">
+<section className="px-6 py-24">
 
-<div className="mx-auto text-center max-w-7xl">
+<div className="mx-auto max-w-7xl">
 
-<h2 className="mb-12 text-2xl font-bold md:text-3xl">
+<h2 className="mb-16 text-3xl font-bold text-center">
+
 Platform Features
+
 </h2>
 
-<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
+<div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
 {features.map((f,i)=>(
 
 <motion.div
 key={i}
-whileHover={{scale:1.05}}
-initial={{opacity:0,y:30}}
+initial={{opacity:0,y:40}}
 whileInView={{opacity:1,y:0}}
+whileHover={{scale:1.07,y:-8}}
 viewport={{once:true}}
-transition={{duration:0.6,delay:i*0.1}}
-className="p-6 transition bg-white shadow-xl rounded-3xl hover:shadow-2xl"
+transition={{delay:i*0.1}}
+className="p-8 text-center transition rounded-3xl bg-white/70 backdrop-blur-xl shadow-xl hover:shadow-[0_20px_60px_rgba(79,70,229,0.4)]"
 >
 
-<div className="mb-3 text-3xl">{f.icon}</div>
+<div className="flex justify-center mb-4 text-indigo-600">
 
-<h3 className="mb-2 text-lg font-semibold">{f.title}</h3>
+{f.icon}
 
-<p className="text-gray-600">{f.desc}</p>
+</div>
+
+<h3 className="mb-2 text-lg font-semibold">
+
+{f.title}
+
+</h3>
+
+<p className="text-gray-600">
+
+{f.desc}
+
+</p>
 
 </motion.div>
 
@@ -134,40 +228,60 @@ className="p-6 transition bg-white shadow-xl rounded-3xl hover:shadow-2xl"
 
 </section>
 
+{/* HOW CAMPUS CARE WORKS */}
 
-{/* HOW IT WORKS */}
+<section className="relative px-6 py-28 bg-gradient-to-b from-white via-indigo-50 to-purple-50">
 
-<section className="px-4 py-20 bg-white md:px-6">
+<div className="mx-auto max-w-7xl">
 
-<div className="max-w-6xl mx-auto text-center">
+<motion.h2
+initial={{opacity:0,y:40}}
+whileInView={{opacity:1,y:0}}
+viewport={{once:true}}
+className="mb-20 text-4xl font-bold text-center"
+>
 
-<h2 className="mb-12 text-2xl font-bold md:text-3xl">
-How CampusCare Works
-</h2>
+How Invertis CampusCare Works
 
-<div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+</motion.h2>
 
-{[
-{icon:"📝",title:"Submit Complaint",desc:"Students report issues or ragging incidents."},
-{icon:"📡",title:"Track Progress",desc:"Students monitor complaint progress in real time."},
-{icon:"✅",title:"Resolution",desc:"Admins resolve issues with transparency."}
-].map((item,i)=>(
+<div className="relative grid gap-12 md:grid-cols-4">
+
+{/* Animated line */}
+
+<div className="absolute top-14 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 hidden md:block"></div>
+
+{steps.map((step,i)=>(
 
 <motion.div
 key={i}
-whileHover={{scale:1.05}}
-initial={{opacity:0,y:30}}
+initial={{opacity:0,y:40}}
 whileInView={{opacity:1,y:0}}
 viewport={{once:true}}
-transition={{delay:i*0.2}}
-className="p-8 transition shadow-xl rounded-3xl bg-gray-50 hover:shadow-2xl"
+transition={{delay:i*0.15}}
+whileHover={{scale:1.07,y:-10}}
+className="relative p-8 text-center transition shadow-xl rounded-3xl bg-white/70 backdrop-blur-xl hover:shadow-[0_20px_70px_rgba(99,102,241,0.4)]"
 >
 
-<div className="mb-3 text-3xl">{item.icon}</div>
+{/* step circle */}
 
-<h3 className="mb-2 text-lg font-semibold">{item.title}</h3>
+<div className="flex items-center justify-center mx-auto mb-6 text-xl font-bold text-white rounded-full shadow-lg w-14 h-14 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
 
-<p className="text-gray-600">{item.desc}</p>
+{step.icon}
+
+</div>
+
+<h3 className="mb-3 text-lg font-semibold">
+
+{step.title}
+
+</h3>
+
+<p className="text-sm leading-relaxed text-gray-600">
+
+{step.desc}
+
+</p>
 
 </motion.div>
 
@@ -179,12 +293,11 @@ className="p-8 transition shadow-xl rounded-3xl bg-gray-50 hover:shadow-2xl"
 
 </section>
 
-
 {/* STATS */}
 
-<section className="px-4 py-20 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 md:px-6">
+<section className="px-6 py-24 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
 
-<div className="grid max-w-6xl grid-cols-1 gap-10 mx-auto text-center md:grid-cols-3">
+<div className="grid max-w-6xl gap-10 mx-auto text-center md:grid-cols-3">
 
 {stats.map((s,i)=>(
 
@@ -193,12 +306,20 @@ key={i}
 initial={{opacity:0,scale:0.8}}
 whileInView={{opacity:1,scale:1}}
 viewport={{once:true}}
-transition={{duration:0.5,delay:i*0.2}}
+transition={{delay:i*0.2}}
 >
 
-<h3 className="text-4xl font-bold md:text-5xl">{s.value}</h3>
+<h3 className="text-5xl font-bold">
 
-<p className="mt-2 text-lg opacity-90">{s.label}</p>
+<CountUp end={s.value} duration={3}/>+
+
+</h3>
+
+<p className="mt-2 text-lg">
+
+{s.label}
+
+</p>
 
 </motion.div>
 
@@ -208,36 +329,97 @@ transition={{duration:0.5,delay:i*0.2}}
 
 </section>
 
+{/* CAMPUS GALLERY */}
 
-{/* INVERTIS SECTION */}
+<section className="px-6 py-24 bg-gray-50">
 
-<section className="px-4 py-20 md:px-6">
+<h2 className="mb-16 text-3xl font-bold text-center">
 
-<div className="grid items-center max-w-6xl gap-10 mx-auto md:grid-cols-2">
+Campus Gallery
 
-<motion.img
-initial={{opacity:0,x:-40}}
-whileInView={{opacity:1,x:0}}
-viewport={{once:true}}
-src="/invertis.png"
-alt="Invertis University"
-className="w-full shadow-2xl rounded-3xl"
-/>
-
-<motion.div
-initial={{opacity:0,x:40}}
-whileInView={{opacity:1,x:0}}
-viewport={{once:true}}
->
-
-<h2 className="mb-4 text-2xl font-bold md:text-3xl">
-About Invertis University
 </h2>
 
-<p className="text-gray-600">
-Invertis University focuses on providing a safe and transparent campus environment.
-CampusCare helps students report infrastructure issues and ragging incidents while ensuring accountability.
+<div className="grid max-w-6xl gap-8 mx-auto md:grid-cols-3">
+
+{["/2.jpg","/invertis.png","/1.webp"].map((img,i)=>(
+
+<motion.div
+key={i}
+whileHover={{scale:1.05}}
+className="overflow-hidden shadow-xl rounded-3xl"
+>
+
+<img
+src={img}
+className="object-cover w-full h-[250px]"
+/>
+
+</motion.div>
+
+))}
+
+</div>
+
+</section>
+
+{/* PARALLAX CAMPUS */}
+
+<section
+className="relative h-[400px] bg-fixed bg-center bg-cover"
+style={{backgroundImage:"url('/invertis-campus.jpeg')"}}
+>
+
+<div className="flex items-center justify-center h-full bg-black/60">
+
+<h2 className="text-4xl font-bold text-white">
+
+Experience Invertis Campus
+
+</h2>
+
+</div>
+
+</section>
+
+{/* EXTRA COMPONENTS */}
+
+<LeadershipSection/>
+<CampusIssueMap/>
+<CampusSafety/>
+
+{/* CTA */}
+
+<section
+className="relative py-24 bg-center bg-cover"
+style={{backgroundImage:"url('/invertis-campus.jpeg')"}}
+>
+
+<div className="absolute inset-0 bg-black/70"></div>
+
+<div className="relative max-w-3xl mx-auto text-center text-white">
+
+<h2 className="text-3xl font-bold">
+
+Make Your Campus Better
+
+</h2>
+
+<p className="mt-4">
+
+Report issues and improve campus life.
+
 </p>
+
+<motion.div whileHover={{scale:1.08}}>
+
+<Link
+to="/complaint"
+className="inline-block py-3 mt-6 font-semibold text-white px-7 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500"
+>
+
+Submit Complaint
+
+</Link>
 
 </motion.div>
 
@@ -246,77 +428,7 @@ CampusCare helps students report infrastructure issues and ragging incidents whi
 </section>
 
 
-{/* PARALLAX */}
-
-<section
-className="relative h-[300px] md:h-[400px] bg-fixed bg-center bg-cover"
-style={{backgroundImage:"url('/invertis-campus.jpeg')"}}
->
-
-<div className="flex items-center justify-center h-full bg-black/60">
-
-<h2 className="text-2xl font-bold text-white md:text-4xl">
-Making Campus Life Better
-</h2>
-
 </div>
 
-</section>
-
-
-{/* CAMPUS VIDEO */}
-
-<section className="px-4 py-20 bg-gray-50 md:px-6">
-
-<div className="max-w-5xl mx-auto text-center">
-
-<h2 className="mb-8 text-2xl font-bold md:text-3xl">
-Explore Our Campus
-</h2>
-
-<div className="overflow-hidden shadow-2xl rounded-3xl">
-
-<video controls className="w-full">
-<source src="/invertis-tour.mp4" type="video/mp4"/>
-</video>
-
-</div>
-
-</div>
-
-</section>
-
-
-<LeadershipSection />
-<CampusIssueMap />
-<CampusSafety />
-
-
-{/* CTA */}
-
-<section className="px-4 py-20 md:px-6">
-
-<div className="max-w-3xl p-8 mx-auto text-center bg-white shadow-2xl rounded-3xl">
-
-<h2 className="text-2xl font-bold md:text-3xl">
-Make Your Campus Better
-</h2>
-
-<p className="mt-3 text-gray-600">
-Report issues and help improve campus life.
-</p>
-
-<Link
-to="/complaint"
-className="inline-block px-6 py-3 mt-6 text-white rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 hover:scale-105"
->
-Submit Complaint
-</Link>
-
-</div>
-
-</section>
-
-</div>
-);
+)
 }
