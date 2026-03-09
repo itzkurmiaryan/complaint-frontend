@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ClipboardList, Clock, Loader, CheckCircle, PlusCircle, List } from "lucide-react";
+import API from "../api/axiosConfig";
 
 export default function Dashboard() {
 
@@ -11,44 +11,48 @@ export default function Dashboard() {
   const student = JSON.parse(localStorage.getItem("student"));
 
   const [complaints, setComplaints] = useState([]);
-  const [points,setPoints] = useState(student?.points || 0);
-  const [badge,setBadge] = useState(student?.badge || "New Citizen");
-
-
+  const [points,setPoints] = useState(0);
+  const [badge,setBadge] = useState("New Citizen");
 
   useEffect(() => {
 
-    if (!token) navigate("/login");
-
-    else{
-      fetchComplaints();
-      fetchProfile();   // ⭐ new
+    if (!token) {
+      navigate("/login");
+      return;
     }
 
-    const interval = setInterval(fetchComplaints, 5000);
+    fetchComplaints();
+
+    const interval = setInterval(fetchComplaints,5000);
 
     return () => clearInterval(interval);
 
   }, []);
 
 
+  const fetchComplaints = async () => {
 
-  // ⭐ Fetch Latest Profile
-  const fetchProfile = async () => {
+    try {
 
-    try{
-
-      const res = await axios.get("http://localhost:5000/api/complaints/my", {
-        headers:{ Authorization:`Bearer ${token}` }
+      const res = await API.get("/api/complaints/my", {
+        headers: { Authorization: `Bearer ${token}` }
       });
 
-      const solved = res.data.filter(c=>c.status==="Resolved").length;
+      const data = res.data || [];
+
+      setComplaints(data);
+
+      /* Calculate points */
+
+      const solved = data.filter(c => c.status === "Resolved").length;
 
       const calculatedPoints = solved * 10;
 
       setPoints(calculatedPoints);
 
-      let badgeLevel="New Citizen";
+      /* Badge Logic */
+
+      let badgeLevel = "New Citizen";
 
       if(calculatedPoints >=100) badgeLevel="🥉 Bronze Leader";
       if(calculatedPoints >=200) badgeLevel="🥈 Silver Leader";
@@ -56,26 +60,6 @@ export default function Dashboard() {
       if(calculatedPoints >=1000) badgeLevel="👑 Platinum Civic Hero";
 
       setBadge(badgeLevel);
-
-    }catch(err){
-
-      console.log(err);
-
-    }
-
-  };
-
-
-
-  const fetchComplaints = async () => {
-
-    try {
-
-      const res = await axios.get("http://localhost:5000/api/complaints/my", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setComplaints(res.data);
 
     } catch (err) {
 
@@ -86,11 +70,10 @@ export default function Dashboard() {
   };
 
 
-
-  const total = complaints.length;
-  const pending = complaints.filter(c => c.status === "Pending").length;
-  const inProgress = complaints.filter(c => c.status === "In Progress").length;
-  const resolved = complaints.filter(c => c.status === "Resolved").length;
+  const total = complaints?.length || 0;
+  const pending = complaints?.filter(c => c.status === "Pending").length || 0;
+  const inProgress = complaints?.filter(c => c.status === "In Progress").length || 0;
+  const resolved = complaints?.filter(c => c.status === "Resolved").length || 0;
 
 
 
@@ -101,7 +84,6 @@ export default function Dashboard() {
       animate={{ opacity: 1 }}
       className="min-h-screen px-4 pt-20 sm:px-6 md:px-10 bg-gradient-to-br from-indigo-50 to-white"
     >
-
 
       {/* PROFILE */}
 
@@ -185,6 +167,7 @@ export default function Dashboard() {
     </motion.div>
 
   );
+
 }
 
 

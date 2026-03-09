@@ -6,6 +6,8 @@ const [search,setSearch] = useState("");
 const [statusFilter,setStatusFilter] = useState("All");
 const [page,setPage] = useState(1);
 
+const [selectedComplaint,setSelectedComplaint] = useState(null);
+
 const complaintsPerPage = 8;
 
 /* SEARCH + FILTER */
@@ -83,6 +85,7 @@ className="p-2 border rounded"
 <th className="p-3">Priority</th>
 <th className="p-3">Status</th>
 <th className="p-3">Update</th>
+<th className="p-3">View</th>
 <th className="p-3">Delete</th>
 
 </tr>
@@ -94,7 +97,7 @@ className="p-2 border rounded"
 {currentComplaints.length === 0 ? (
 
 <tr>
-<td colSpan="7" className="p-4 text-center text-gray-500">
+<td colSpan="8" className="p-4 text-center text-gray-500">
 No complaints found
 </td>
 </tr>
@@ -164,6 +167,19 @@ className="p-1 border rounded"
 
 </td>
 
+{/* VIEW BUTTON */}
+
+<td>
+
+<button
+onClick={()=>setSelectedComplaint(c)}
+className="px-3 py-1 text-white bg-indigo-600 rounded hover:bg-indigo-700"
+>
+View
+</button>
+
+</td>
+
 <td>
 
 <button
@@ -212,6 +228,70 @@ Next ➡
 </button>
 
 </div>
+
+
+{/* VIEW MODAL */}
+
+{selectedComplaint && (
+
+<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+
+<div className="w-full max-w-2xl p-6 bg-white rounded-xl">
+
+<h3 className="mb-4 text-xl font-bold">
+Complaint Details
+</h3>
+
+<p><b>Track ID:</b> {selectedComplaint.complaintId}</p>
+<p><b>Title:</b> {selectedComplaint.title}</p>
+<p><b>Description:</b> {selectedComplaint.description}</p>
+<p><b>Category:</b> {selectedComplaint.category}</p>
+<p><b>Location:</b> {selectedComplaint.location}</p>
+<p><b>Status:</b> {selectedComplaint.status}</p>
+<p><b>Student:</b> {selectedComplaint.student?.name}</p>
+{/* IMAGES */}
+
+{selectedComplaint.images?.length > 0 && (
+
+<div>
+
+<strong>Images:</strong>
+
+<div className="flex flex-wrap gap-2 mt-2">
+
+{selectedComplaint.images.map((img, i) => (
+
+<img
+key={i}
+src={`${import.meta.env.VITE_API_URL}/uploads/${img}`}
+alt="complaint"
+className="object-cover w-24 h-24 rounded"
+/>
+
+))}
+
+</div>
+
+</div>
+
+)}
+
+<div className="mt-6 text-right">
+
+<button
+onClick={()=>setSelectedComplaint(null)}
+className="px-4 py-2 text-white bg-gray-700 rounded"
+>
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+)}
 
 </div>
 
