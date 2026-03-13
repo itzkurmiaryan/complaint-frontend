@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import LeadershipSection from "../components/LeadershipSection";
 import CampusIssueMap from "../components/CampusIssueMap";
 import CampusSafety from "../components/CampusSafety";
+import CampusVideo from "../components/CampusVideo";
 
 export default function Home() {
 
@@ -361,6 +362,8 @@ className="object-cover w-full h-[250px]"
 </div>
 
 </section>
+
+<CampusVideo/>
 
 {/* PARALLAX CAMPUS */}
 
